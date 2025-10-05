@@ -1,0 +1,643 @@
+\documentclass{article}
+
+\usepackage[english]{babel}
+
+% Set page size and margins
+% Replace `letterpaper' with `a4paper' for UK/EU standard size
+\usepackage[a4paper,top=2cm,bottom=2cm,left=3cm,right=3cm,marginparwidth=1.75cm]{geometry}
+
+% Useful packages
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{subcaption}
+\usepackage{float}
+\usepackage{pdflscape}
+\usepackage{siunitx}
+\PassOptionsToPackage{hyphens}{url}\usepackage{hyperref}
+\usepackage{cleveref}
+\usepackage[utf8]{inputenc}
+%\usepackage[right]{lineno}
+\usepackage{csquotes}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{adjustbox}
+\usepackage{appendix}
+\usepackage{array}
+\usepackage{amsmath}
+\usepackage{geometry}
+\usepackage{url}
+\usepackage{titlesec}
+%\usepackage[compatibility=false]{caption}
+\usepackage{authblk}
+\usepackage{threeparttable}
+\usepackage{xcolor} % Load the xcolor package for color options
+\renewcommand{\thetable}{\Roman{table}}
+
+% Define a new format for \subsection
+\titleformat{\subsection}
+  {\mdseries\itshape\large} % Medium series, italic shape, and large font size
+  {\thesubsection}{1em}{} % Numbering, spacing, and the section title itself
+
+
+% Emerald Harvard Citation Style
+
+\usepackage[english]{babel}
+\usepackage[style=authoryear,backend=biber,natbib=true,maxcitenames=2,uniquelist=false]{biblatex}
+\addbibresource{Bibliography.bib} % your .bib file
+
+% Customizing biblatex for Harvard style
+% Customizing biblatex for Harvard style
+\DeclareNameAlias{sortname}{family-given}
+\DeclareNameAlias{default}{family-given}
+
+\renewbibmacro{in:}{}
+\DeclareFieldFormat[article]{title}{\mkbibquote{#1}\addcomma}
+\DeclareFieldFormat[book]{title}{\mkbibemph{#1}\addcomma}
+\DeclareFieldFormat[bookinbook]{title}{\mkbibemph{#1}\addcomma}
+\DeclareFieldFormat[inbook]{title}{\mkbibquote{#1}\addcomma}
+\DeclareFieldFormat[incollection]{title}{\mkbibquote{#1}\addcomma}
+\DeclareFieldFormat[inproceedings]{title}{\mkbibquote{#1}\addcomma}
+\DeclareFieldFormat[manual]{title}{\mkbibemph{#1}\addcomma}
+\DeclareFieldFormat[misc]{title}{\mkbibemph{#1}\addcomma}
+\DeclareFieldFormat[thesis]{title}{\mkbibemph{#1}\addcomma}
+\DeclareFieldFormat[unpublished]{title}{\mkbibquote{#1}\addcomma}
+\DeclareFieldFormat[patent]{title}{\mkbibemph{#1}\addcomma}
+\DeclareFieldFormat[report]{title}{\mkbibemph{#1}\addcomma}
+\DeclareFieldFormat[online]{title}{\mkbibquote{#1}\addcomma}
+\DeclareFieldFormat[software]{title}{\mkbibemph{#1}\addcomma}
+\DeclareFieldFormat[booklet]{title}{\mkbibemph{#1}\addcomma}
+\DeclareFieldFormat[periodical]{title}{\mkbibemph{#1}\addcomma}
+\DeclareFieldFormat[standard]{title}{\mkbibemph{#1}\addcomma}
+
+\DeclareFieldFormat[article]{journaltitle}{\iffieldundef{shortjournal}{\mkbibemph{#1}\addcomma}{\mkbibemph{\printfield{shortjournal}}\addcomma}}
+\DeclareFieldFormat{volume}{\bibstring{volume}~#1}
+\DeclareFieldFormat{number}{\bibstring{number}~#1}
+
+% Definitions for "Vol." and "No."
+\DefineBibliographyStrings{english}{
+  volume = {Vol.},
+  number = {No.}
+}
+
+\renewbibmacro*{volume+number+eid}{%
+  \printfield{volume}%
+  \setunit*{\addspace}%
+  \printfield{number}%
+  \setunit{\addcomma\space}%
+  \printfield{eid}}
+
+\renewbibmacro*{journal+issuetitle}{%
+  \usebibmacro{journal}%
+  \setunit*{\addcomma\space}%
+  \usebibmacro{volume+number+eid}%
+  \setunit{\addcomma\space}%
+  \usebibmacro{issue+date}}
+
+\renewbibmacro*{publisher+location+date}{%
+  \printlist{publisher}%
+  \iflistundef{location}
+    {\setunit*{\addcomma\space}}
+    {\setunit*{\addcolon\space}}%
+  \printlist{location}%
+  \setunit*{\addcomma\space}%
+  \usebibmacro{date}}
+
+\renewcommand*{\bibpagespunct}{\addcomma\space}
+
+% Customizing page field format to prevent duplication
+% \DeclareFieldFormat{pages}{%
+%   \mkfirstpage[{\mkpageprefix[page]{#1}}]{#1}}
+
+% Customizing citations for Harvard style
+\DeclareCiteCommand{\cite}[\mkbibparens]
+  {\usebibmacro{prenote}}
+  {\usebibmacro{citeindex}%
+   \usebibmacro{cite}}
+  {\multicitedelim}
+  {\usebibmacro{postnote}}
+
+\renewbibmacro*{cite:labelyear+extrayear}{%
+  \iffieldundef{labelyear}
+    {}
+    {\printtext[bibhyperref]{%
+       \printfield{labelyear}%
+       \printfield{extrayear}}}}
+
+\renewbibmacro*{cite:labeldate+extradate}{%
+  \iffieldundef{labelyear}
+    {}
+    {\printtext[bibhyperref]{%
+       \printfield{labelyear}%
+       \printfield{extradate}}}}
+
+\AtEveryBibitem{
+  \clearfield{month}
+  \clearfield{day}
+  \ifentrytype{book}{
+    \clearlist{location}
+  }{}
+}
+
+% Formatting "et al." in italics followed by a comma
+\DefineBibliographyStrings{english}{
+  andothers = {\textit{et al.},}
+}
+
+\DeclareFieldFormat[article]{volume}{\bibstring{jourvol}\addnbspace #1}
+\DeclareFieldFormat[article]{number}{\bibstring{number}\addnbspace #1}
+\DeclareFieldFormat[article]{volume}{Vol. #1}
+\DeclareFieldFormat[article]{number}{No. #1}
+% Customizing DOI field format to lowercase "doi"
+%\DeclareFieldFormat{doi}{\bibstring{doi}\addcolon\space\url{#1}}
+
+% Customizing URL field format to "available at:"
+\DeclareFieldFormat{url}{\bibstring{available at}\addcolon\space\url{#1}}
+\DeclareFieldFormat{urldate}{\mkbibparens{accessed \addspace#1}}
+
+% Customizing urldate to match the required format
+\DeclareFieldFormat{urldate}{%
+  \mkbibparens{accessed\space%
+    \thefield{urlday}\addspace%
+    \mkbibmonth{\thefield{urlmonth}}\addspace%
+    \thefield{urlyear}}}
+
+
+% Configure cleveref
+\crefformat{figure}{#2Figure~#1#3}
+\Crefformat{figure}{#2Figure~#1#3}
+\crefformat{table}{#2Table~#1#3}
+\Crefformat{table}{#2Table~#1#3}
+\crefformat{section}{#2Section~#1#3}
+\Crefformat{section}{#2Section~#1#3}
+
+%my specificities
+%\usepackage{mathptmx} % Use this for Times font, including math
+\usepackage{setspace} % Package for line spacing
+\setstretch{1.5} % Set line spacing to 1.5
+\setlength{\parindent}{15pt}  % Indent each paragraph by 15pt
+\setlength{\parskip}{10pt}     % Add 10pt space between paragraphs
+
+%Front Matter
+\author[1]{Estrada, Dianni Adrei}
+
+\affil[1]{M2 Finance, Technology, and Data (FTD), Université Paris 1 - Panthéon Sorbonne}
+
+\title{\textbf{Replication of Vulnerable Growth (Adrian et al., 2019) with Extension using ECB-SPF Data}}
+
+\begin{document}
+\maketitle
+
+
+\begin{abstract}
+This paper presents a replication of the seminal work "Vulnerable Growth" by Adrian et al. (2019) with an extension focused on the Euro Area. The study employs quantile regression techniques to assess how financial conditions, represented by the Composite Indicator of Systemic Stress (CISS), affect GDP growth vulnerability. Key findings confirm that financial stress amplifies downside risks to economic growth while leaving upside risks relatively unchanged. The research extends the original framework by incorporating point and distributional forecasts from the European Central Bank’s Survey of Professional Forecasters (ECB-SPF), revealing that expert forecasts, particularly at the upper percentiles, improve predictive accuracy. The analysis underscores the importance of combining real economic indicators and financial stress measures to achieve robust GDP growth forecasts, especially during periods of economic uncertainty. The paper also evaluates forecast calibration and sharpness using advanced scoring metrics, confirming that percentile-based SPF forecasts capture macroeconomic risks effectively.
+
+\medskip
+%add 6 keywords
+\noindent \textbf{Keywords:} Vulnerable Growth, Quantile Regression, GDP Growth Forecast, Financial Stress, ECB Survey of Professional Forecasters (ECB-SPF), CISS, Economic Uncertainty
+\end{abstract}
+
+\linenumbers
+
+\begin{landscape}
+\section{Literature Review}
+\label{sec:literature_review}
+
+\small
+\begin{longtable}{|p{3cm}|p{5cm}|p{3cm}|p{3cm}|p{4cm}|p{4cm}|}
+\hline
+\textbf{Author(s)} & \textbf{Title} & \textbf{Journal} & \textbf{Data Used} & \textbf{Methodology} & \textbf{Findings} \\ \hline
+\endfirsthead
+\hline
+\textbf{Author(s)} & \textbf{Title} & \textbf{Reference} & \textbf{Data Used} & \textbf{Methodology} & \textbf{Findings} \\ \hline
+\endhead
+\hline
+\endfoot
+
+\cite{ferrara_high-frequency_2022} & High-Frequency Monitoring of Growth at Risk & International Journal of Forecasting & Daily financial conditions and quarterly GDP data (Euro area) & Bayesian quantile regression using mixed-data sampling (MIDAS) & Real-time monitoring of financial risks improves the detection of GDP downturns and enhances nowcasting performance during crises. \\ \hline
+\cite{adrian_vulnerable_2019} & Vulnerable Growth & American Economic Review & US GDP growth data and financial conditions indices & Quantile regression of GDP growth on financial indicators & Downside risks to GDP growth increase significantly with worsening financial conditions, while upside risks remain stable. \\ \hline
+\cite{bok_macroeconomic_2018} & Macroeconomic Nowcasting and Forecasting with Big Data & Annual Review of Economics & Real-time data on US GDP, inflation, and employment & Dynamic factor models and real-time filtering methods for big data analysis & Big data improves the timeliness and accuracy of macroeconomic forecasts, especially for nowcasting GDP growth during uncertain periods. \\ \hline
+\cite{sufi_financial_2022} & Financial Crises: A Survey & Handbook of International Economics & Historical financial crisis data (1870–2020) & Local projection methods for estimating the impact of financial crises on GDP & Financial crises result in prolonged GDP downturns, with large, persistent output losses over time. \\ \hline
+\cite{gneiting_model_2023} & Model Diagnostics and Forecast Evaluation for Quantiles & Annual Review of Statistics and Its Application & US COVID-19 mortality forecast data & Calibration and evaluation using quantile reliability diagrams and scoring rules & Quantile forecasts improve prediction accuracy, though challenges remain in evaluating uncertainty in real-time forecasts. \\ \hline
+\cite{raftery_using_nodate} & Bayesian Model Averaging for Forecast Calibration & Monthly Weather Review & Surface temperature and pressure ensemble forecasts (Pacific Northwest) & Bayesian model averaging (BMA) for post-processing forecast ensembles & BMA improves forecast calibration and sharpness, outperforming raw ensemble means in accuracy and reliability. \\ \hline
+
+\end{longtable}
+\end{landscape}
+
+
+
+\section{Methodology}
+
+The methodology I utilized to accomplish this report is threefold. First, I replicated the paper "Vulnerable Growth" by Adrian et al. (2019) tailored in the European context. I, then, extended the paper by incorporating the GDP growth forecasts from the ECB Survey of Professional Forecasters (ECB-SPF). Lastly, I scored and ranked the different forecast combinations overtime and evaluated them using the methodology proposed by Ferrara et al. (2022).
+
+\subsection*{1. Replication of "Vulnerable Growth" by Adrian et al. (2019)}
+
+To replicate the findings of Adrian et al. (2019), I followed their framework for forecasting GDP growth using quantile regressions and predictive distributions. The focus of their analysis was to evaluate how financial conditions, measured by the National Financial Conditions Index (NFCI), contribute to the vulnerability of economic growth. In my replication, I made the following adjustments to tailor the analysis to the European context:
+\begin{itemize}
+    \item \textbf{Data Adjustments:} I used GDP growth data for the euro area instead of the United States.
+    \item \textbf{Financial Conditions Indicator:} I replaced the NFCI with the Composite Indicator of Systemic Stress (CISS), which is a financial stress indicator developed for the euro area.
+    \item \textbf{Forecasting Horizons:} I replicated their framework for both one-quarter-ahead (QoQA) and one-year-ahead (YoY) GDP growth.
+\end{itemize}
+
+To assess the predictive accuracy of the model, I plotted probability integral transform (PIT) empirical cumulative distribution functions (CDFs) and analyzed the calibration of the forecasts relative to a 45-degree line and confidence bands. Additionally, I computed scoring functions over time to evaluate how well the models fit the data, considering both skewed t-distribution models and linear regression frameworks.
+
+\subsection*{2. Extension Using ECB Survey of Professional Forecasters (ECB-SPF)}
+
+In the first extension of the original framework, I incorporated data from the European Central Bank’s Survey of Professional Forecasters (ECB-SPF) to enhance the models:
+\begin{itemize}
+    \item \textbf{Point Forecasts:} I included mean and median point forecasts for GDP growth from the ECB-SPF as additional predictor variables.
+    \item \textbf{Distributional Forecasts:} I also extended the model by including various quantiles of the SPF forecasts (e.g., 5th, 25th, 75th, and 90th percentiles) to capture the effects of different risk scenarios on GDP growth.
+\end{itemize}
+
+The integration of the ECB-SPF data aimed to evaluate whether professional forecasts improve the predictive power of models based on GDP and financial conditions alone. I compared models that incorporated different combinations of SPF quantiles with those that used only GDP or CISS to determine the added value of expert forecasts. For these comparisons, I analyzed the PIT CDFs and the time series of model scores, focusing on their calibration and fit over different economic periods.
+
+\subsection*{3. Evaluation of Forecast Combinations Using Ferrara et al. (2022)}
+
+To further extend the analysis, I applied the evaluation criteria proposed by Ferrara et al. (2022), which use four scoring metrics to assess the quality of probabilistic forecasts. I focused on two key metrics:
+\begin{itemize}
+    \item \textbf{Average Log Score (LS):} This measures the overall fit of the forecast by penalizing deviations from the true distribution. A higher log score indicates better predictive accuracy.
+    \item \textbf{Average Continuous Ranked Probability Score (CRPS):} This measures the calibration of the forecasts, with lower scores indicating sharper and more accurate predictive distributions.
+\end{itemize}
+
+I evaluated a wide range of model combinations to identify the best-performing forecasts for one-quarter-ahead and one-year-ahead GDP growth. The models included:
+\begin{itemize}
+    \item GDP only.
+    \item CISS only.
+    \item Combinations of GDP and CISS.
+    \item GDP or CISS combined with mean or median SPF forecasts.
+    \item GDP or CISS combined with SPF percentile forecasts (5th, 25th, 75th, 90th percentiles).
+\end{itemize}
+
+The results demonstrated that percentile-based SPF forecasts, particularly the 90th percentile, improved calibration and predictive sharpness when combined with GDP and CISS. In contrast, combining mid-point SPF forecasts (mean/median) often resulted in less calibrated forecasts. The model that combined GDP, CISS, and the 90th percentile SPF forecast emerged as the most effective in one-year-ahead predictions, reflecting its ability to capture upside risks and improve forecast accuracy.
+
+
+\section{Key Findings}
+\label{sec:main_section}
+
+\begin{figure}[H]
+    \centering
+    % Panel (a)
+    \begin{subfigure}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Figures/fig1_gdp_y.png}
+        \caption{Real GDP growth vs Current Quarter GDP Growth (Yearly)}
+        \label{fig:sub_a}
+    \end{subfigure}
+    \hfill
+    % Panel (b)
+    \begin{subfigure}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Figures/fig1_ciss_y.png}
+        \caption{Real GDP growth vs Financial Conditions (Yearly)}
+        \label{fig:sub_b}
+    \end{subfigure}
+
+    % Panel (c)
+    \vskip\baselineskip
+    \begin{subfigure}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Figures/fig1_gdp_q.png}
+        \caption{Real GDP growth vs Current Quarter GDP Growth (Quarterly)}
+        \label{fig:sub_c}
+    \end{subfigure}
+    \hfill
+    % Panel (d)
+    \begin{subfigure}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Figures/fiq1_ciss_q.png}
+        \caption{Real GDP growth vs Financial Conditions (Quarterly)}
+        \label{fig:sub_d}
+    \end{subfigure}
+
+    \caption{Comparison of Real GDP Growth and Economic and Financial Conditions Over Time}
+    \label{fig:combined}
+\end{figure}
+
+\begin{itemize}
+    \item The indicator CISS spikes during crises indicate a rise in financial stress, corresponding to sharp declines in GDP growth. Downturns are still evident during crises, though less abrupt due to the year-on-year averaging. Comparing with Adrian et al. (2019), both indices of financial conditions - NFCI and CISS - behave similarly during crises. Similar to Adrian et al. (2019), downside fluctuations in GDP correspond to economic contractions, indicating that tighter conditions or negative shocks coincide with sharp downturns. Unlike the U.S. data that showed persistence in post-crisis recoveries, the Euro Area GDP recovery from crises (e.g., post-2012 debt crisis) appears slower and more prone to additional downturns. The QoQA graphs show higher volatility in the short-term GDP growth, as is typical for QoQA measures. On the other hand, the YoY graphs show smoother trends compared to QoQA which better highlights sustained economic trends.
+\end{itemize}
+
+\begin{figure}[H]
+    \centering
+    % Panel (a)
+    \begin{subfigure}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Figures/fig2_gdp_q.png}
+        \caption{One Quarter Ahead: GDP}
+        \label{fig:sub_a}
+    \end{subfigure}
+    \hfill
+    % Panel (b)
+    \begin{subfigure}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Figures/fig2_gdp_y.png}
+        \caption{One Year Ahead: GDP}
+        \label{fig:sub_b}
+    \end{subfigure}
+
+    % Panel (c)
+    \vskip\baselineskip
+    \begin{subfigure}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Figures/fig2_ciss_q.png}
+        \caption{One Quarter Ahead: CISS}
+        \label{fig:sub_c}
+    \end{subfigure}
+    \hfill
+    % Panel (d)
+    \begin{subfigure}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Figures/fig2_ciss_y.png}
+        \caption{One Year Ahead: CISS}
+        \label{fig:sub_d}
+    \end{subfigure}
+
+    \caption{Quantile Regressions for GDP Growth Projections}
+    \label{fig:combined}
+\end{figure}
+
+
+\begin{itemize}
+    \item Short-term GDP momentum, as seen in Panel A (one-quarter-ahead GDP), shows a near-linear positive slope at the mean, with sharper positive slopes at the lower quantiles, reflecting significant downside risks during economic fragilities in the Euro Area. In contrast, Panel B (one-year-ahead GDP) indicates a flatter mean slope, suggesting diminished momentum over time, though the 5th quantile consistently signals persistent downside risks. Panel C (one-quarter-ahead CISS) demonstrates that heightened financial stress correlates strongly with lower future GDP growth, particularly at the lower quantiles, underscoring the Euro Area's heightened sensitivity to financial stress relative to the U.S. Finally, Panel D (one-year-ahead CISS) reaffirms that systemic risk events have enduring economic impacts, as evidenced by a steep negative trend in lower quantiles, reinforcing the long-lasting economic costs of financial distress.
+\end{itemize}
+
+\begin{figure}[H]
+    \centering
+    % Panel (a)
+    \begin{subfigure}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Figures/fig3_pan.a_q.png}
+        \caption{One Quarter Ahead}
+        \label{fig:sub_a}
+    \end{subfigure}
+    \hfill
+    % Panel (b)
+    \begin{subfigure}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Figures/fig3_pan.a_y.png}
+        \caption{One Year Ahead}
+        \label{fig:sub_b}
+    \end{subfigure}
+
+    \caption{Probability Distributions of GDP Growth: One Quarter Ahead and One Year Ahead}
+    \label{fig:fig3_combined}
+\end{figure}
+
+\begin{itemize}
+    \item In Panel A (one-quarter-ahead QoQA growth), the realized GDP growth often falls below the 5th percentile during these periods, underscoring severe downside risks. In Panel B (one-year-ahead YoY growth), the dynamics are smoother due to averaging, but the widening of downside risk bands during crises indicates persistent long-term vulnerabilities. The Euro Area also exhibits prolonged recovery phases, with GDP growth remaining below the median for extended periods, particularly after the European debt crisis and during the COVID-19 recovery. The uncertainty bands for the Euro Area remain elevated for longer durations post-crisis, consistent with slower post-crisis recoveries. Like in the U.S. results, the Euro Area displays asymmetric risks where downside deviations dominate during adverse financial conditions, supporting the “vulnerable growth” hypothesis.
+\end{itemize}
+
+\begin{figure}[H]
+    \centering
+    % Panel (a)
+    \begin{subfigure}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Figures/fig4_pan.a_q.png}
+        \caption{Expected Shortfall and Longrise (Quarterly)}
+        \label{fig:sub_a}
+    \end{subfigure}
+    \hfill
+    % Panel (b)
+    \begin{subfigure}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Figures/fig4_pan.b_y.png}
+        \caption{Expected Shortfall and Longrise (Yearly)}
+        \label{fig:sub_b}
+    \end{subfigure}
+
+    \caption{Expected Shortfall (ES) and Longrise (LR) Over Time}
+    \label{fig:fig4_combined}
+\end{figure}
+
+\begin{itemize}
+    \item During financial crises, the expected shortfall (ES) exhibits large negative spikes, indicating substantial downside risks to GDP growth, while the expected longrise (LR) remains relatively stable, reflecting less volatile positive growth potential. Similar to the U.S., the Euro Area exhibits significant downside asymmetry, where financial stress amplifies negative GDP outcomes but does not enhance positive outcomes.In Panel 1 (QoQA GDP Growth), ES shows sharp declines during major crises, such as the Global Financial Crisis and COVID-19, particularly with the skewed t-distribution approach, reinforcing significant downside risks. In contrast, LR remains consistently high, even during downturns, suggesting that potential expansions are not as affected by financial stress. In Panel 2 (YoY GDP Growth), the smoothing effect of annualized growth moderates fluctuations, but ES still dips sharply during crises. The LR remains steady over time, supporting the hypothesis that while upside risks remain constant, downside risks escalate during financial stress.
+\end{itemize}
+
+\begin{figure}[H]
+    \centering
+    % Panel (a)
+    \begin{subfigure}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Figures/fig_5_a.png}
+        \caption{Score of the Predictions (Mean, QoQA)}
+        \label{fig:sub_a}
+    \end{subfigure}
+    \hfill
+    % Panel (b)
+    \begin{subfigure}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Figures/fig_5_b.png}
+        \caption{Score of the Predictions (Mean, YoY)}
+        \label{fig:sub_b}
+    \end{subfigure}
+
+    \vskip\baselineskip
+    % Panel (c)
+    \begin{subfigure}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Figures/fig_5_c.png}
+        \caption{Score of the Predictions (Median, QoQA)}
+        \label{fig:sub_c}
+    \end{subfigure}
+    \hfill
+    % Panel (d)
+    \begin{subfigure}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Figures/fig_5_d.png}
+        \caption{Score of the Predictions (QoQA)}
+        \label{fig:sub_d}
+    \end{subfigure}
+
+    \vskip\baselineskip
+    % Panel (e)
+    \begin{subfigure}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Figures/fig_5_e.png}
+        \caption{Score of the Predictions (Median, YoY)}
+        \label{fig:sub_e}
+    \end{subfigure}
+    \hfill
+    % Panel (f)
+    \begin{subfigure}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Figures/fig_5_f.png}
+        \caption{Score of the Predictions (YoY)}
+        \label{fig:sub_f}
+    \end{subfigure}
+
+    \caption{Comparison of Prediction Scores Over Time: Linear Regression vs Skewed t-Distribution}
+    \label{fig:fig5_combined}
+\end{figure}
+
+\begin{itemize}
+    \item Models incorporating distributional asymmetry (as represented in the skewed t-distribution) in QoQA predictions shows higher sensitivity to financial disruptions, with scores surging during systemic events. The one-year-ahead predictions show that while short-term fluctuations are smoothed, downside risks remain substantial. For example, the skewed t-distribution in YoT predictions shows the prolonged impact of economic shocks, such as the European debt crisis and post-COVID recovery. Combinations of CISS, GDP, and SPF forecasts improve predictive accuracy but differ in sensitivity based on whether mean or median SPF is used. The skewed t-distribution with the three combinations captures tail risks effectively, while linear regression remains robust but potentially underreactive to economic shocks.
+\end{itemize}
+
+\begin{figure}[H]
+    \centering
+    % Panel (a)
+    \begin{subfigure}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Figures/fig_6_a.png}
+        \caption{Linear Regression Scores (Mean, QoQA)}
+        \label{fig:sub_a}
+    \end{subfigure}
+    \hfill
+    % Panel (b)
+    \begin{subfigure}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Figures/fig_6_b.png}
+        \caption{Linear Regression Scores (Mean, YoY)}
+        \label{fig:sub_b}
+    \end{subfigure}
+
+    \vskip\baselineskip
+    % Panel (c)
+    \begin{subfigure}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Figures/fig_6_c.png}
+        \caption{Linear Regression Scores (Median, QoQA)}
+        \label{fig:sub_c}
+    \end{subfigure}
+    \hfill
+    % Panel (d)
+    \begin{subfigure}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Figures/fig_6_d.png}
+        \caption{Linear Regression Scores (Median, YoY)}
+        \label{fig:sub_d}
+    \end{subfigure}
+
+    \caption{Comparison of Linear Regression Scores for Different Predictor Variables Across Mean and Median Forecasts}
+    \label{fig:fig6_combined}
+\end{figure}
+
+
+
+\begin{itemize}
+    \item The one-year-ahead forecasts show generally lower scores than the one-quarter-ahead scores. This is expected, as predicting longer horizons often leads to greater uncertainty. The inclusion of the SPF (Survey of Professional Forecasters) mean  improves the score slightly for both horizons, particularly in non-crisis periods. This suggests that forecaster sentiment adds value to GDP forecasts, though the added benefit may be marginal relative to the CISS + GDP combination. Using the median SPF forecast shows a similar trend to the mean forecast, though the scores show more stability across time. Generally, models that combine GDP, CISS, and SPF forecasts—particularly the median forecasts—demonstrate the strongest predictive performance, especially during economic crises. 
+\end{itemize}
+
+\begin{figure}[H]
+    \centering
+    % Panel (a)
+    \begin{subfigure}[b]{0.8\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Figures/fig_7_a.png}
+        \caption{Comparison of Skewed t-Distribution Scores (Mean)}
+        \label{fig:sub_a}
+    \end{subfigure}
+
+    \vskip\baselineskip
+    % Panel (b)
+    \begin{subfigure}[b]{0.8\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Figures/fig_7_b.png}
+        \caption{Comparison of Skewed t-Distribution Scores (Median)}
+        \label{fig:sub_b}
+    \end{subfigure}
+
+    \caption{Comparison of Skewed t-Distribution Scores for Different Predictor Variables Across Mean and Median Forecasts}
+    \label{fig:fig7_combined}
+\end{figure}
+
+
+\begin{itemize}
+    \item Based on the scores of skewed t-distribution models, the incorporation of SPF (Survey of Professional Forecasters) point forecasts leads to varied effects. When included alongside GDP and CISS, it boosts predictive accuracy, especially outside of crisis periods. The median forecast seems to provide slightly more stable scores, reducing overreactive fluctuations that appear in the mean forecast case. In the post-2012 period, SPF-inclusive models consistently perform better than models without SPF, indicating the value of expert judgment for longer-term projections. During both the GFC and the COVID-19 shock, even SPF-enhanced models experience sharp declines in predictive power, but the recovery post-crisis is faster than in the basic GDP or CISS-only models.
+\end{itemize}
+
+\begin{table}[h!]
+    \centering
+    \caption{Model Comparison of Forecast Scores using Average LS and CRPS (Sorted by Performance)}
+    \begin{adjustbox}{width=\textwidth}
+    \begin{tabular}{l S[table-format=2.6] S[table-format=2.6]}
+        \toprule
+        \textbf{Model Comparison (QoQA)} & \textbf{Average LS} & \textbf{Average CRPS} \\
+        \midrule
+        Model 1: GDP & 3.089064 & 5.129351 \\
+        Model 2: CISS & 3.503142 & 5.839370 \\
+        Model 5: GDP + SPF (Mean) & 3.580150 & 7.216105 \\
+        Model 8: SPF (Median) & 3.676000 & 5.493851 \\
+        Model 24: SPF (90th Percentile) & 3.578497 & 5.000875 \\
+        Model 20: SPF (75th Percentile) & 3.542969 & 4.436029 \\
+        Model 12: SPF (5th Percentile) & 3.577117 & 5.624897 \\
+        Model 16: SPF (25th Percentile) & 3.802248 & 6.049331 \\
+        Model 4: SPF (Mean) & 3.706768 & 5.630683 \\
+        Model 17: GDP + SPF (25th Percentile) & 3.477552 & 6.853917 \\
+        Model 3: GDP + CISS & 3.814418 & 5.795089 \\
+        Model 13: GDP + SPF (5th Percentile) & 3.616301 & 7.485890 \\
+        Model 9: GDP + SPF (Median) & 3.784458 & 7.393604 \\
+        Model 7: GDP + CISS + SPF (Mean) & 3.801089 & 14.450257 \\
+        Model 11: GDP + CISS + SPF (Median) & 3.873483 & 14.320139 \\
+        Model 10: CISS + SPF (Median) & 4.842982 & 9.320999 \\
+        Model 6: CISS + SPF (Mean) & 4.655626 & 9.586384 \\
+        Model 22: CISS + SPF (75th Percentile) & 3.682496 & 7.431705 \\
+        Model 14: CISS + SPF (5th Percentile) & 4.766186 & 8.321456 \\
+        Model 18: CISS + SPF (25th Percentile) & 4.354195 & 10.004334 \\
+        Model 26: CISS + SPF (90th Percentile) & 4.011834 & 7.816225 \\
+        Model 21: GDP + SPF (75th Percentile) & 3.995145 & 6.912010 \\
+        Model 25: GDP + SPF (90th Percentile) & 3.721168 & 5.756027 \\
+        Model 15: GDP + CISS + SPF (5th Percentile) & 4.124662 & 12.637971 \\
+        Model 27: GDP + CISS + SPF (90th Percentile) & 4.135053 & 11.891762 \\
+        Model 19: GDP + CISS + SPF (25th Percentile) & 4.143933 & 13.210404 \\
+        Model 23: GDP + CISS + SPF (75th Percentile) & 3.707066 & 13.815090 \\
+        \bottomrule
+    \end{tabular}
+    \end{adjustbox}
+    \label{tab:model_comparison_sorted}
+\end{table}
+
+
+\begin{itemize}
+    \item Lower CRPS indicates better probabilistic calibration, while higher LS indicates a better fit of the probabilistic forecast. Table II shows that for one-quarter ahead predictions, the SPF mean and median forecasts improve performance by accurately capturing central tendencies. However, the upper percentiles (e.g., 75th percentile) outperform in probabilistic forecasting (CRPS), underscoring their utility in reflecting upside risks to GDP growth. In contrast, simple GDP-based models still perform well for average pointwise fits (LS), showing their reliability as a baseline.
+\end{itemize}
+
+\pagebreak
+
+\begin{table}[h!]
+    \centering
+    \caption{Model Comparison of Forecast Scores using Average LS and CRPS (YoY)}
+    \begin{adjustbox}{width=\textwidth}
+    \begin{tabular}{l S[table-format=2.6] S[table-format=2.6]}
+        \toprule
+        \textbf{Model Comparison (YoY)} & \textbf{Average LS} & \textbf{Average CRPS} \\
+        \midrule
+        Model 27: GDP + CISS + SPF (90th Percentile) & 2.614995 & 2.143752 \\
+        Model 2: CISS & 2.655127 & 2.622655 \\
+        Model 12: SPF (5th Percentile) & 2.942274 & 2.434431 \\
+        Model 23: GDP + CISS + SPF (75th Percentile) & 3.011904 & 2.477776 \\
+        Model 25: GDP + SPF (90th Percentile) & 3.326254 & 2.599342 \\
+        Model 14: CISS + SPF (5th Percentile) & 3.399309 & 3.116118 \\
+        Model 3: GDP + CISS & 3.409808 & 2.522518 \\
+        Model 16: SPF (25th Percentile) & 3.454317 & 2.900817 \\
+        Model 13: GDP + SPF (5th Percentile) & 3.455928 & 2.366265 \\
+        Model 17: GDP + SPF (25th Percentile) & 3.487471 & 2.371064 \\
+        Model 5: GDP + SPF (Mean) & 3.500022 & 2.420800 \\
+        Model 20: SPF (75th Percentile) & 3.541928 & 2.810180 \\
+        Model 9: GDP + SPF (Median) & 3.481793 & 2.401190 \\
+        Model 24: SPF (90th Percentile) & 3.628758 & 2.479891 \\
+        Model 21: GDP + SPF (75th Percentile) & 3.620537 & 2.821836 \\
+        Model 8: SPF (Median) & 3.782122 & 2.933554 \\
+        Model 18: CISS + SPF (25th Percentile) & 3.780746 & 3.497408 \\
+        Model 4: SPF (Mean) & 3.734488 & 2.942428 \\
+        Model 22: CISS + SPF (75th Percentile) & 3.756186 & 3.577526 \\
+        Model 1: GDP & 3.812312 & 3.102512 \\
+        Model 6: CISS + SPF (Mean) & 3.872487 & 3.706449 \\
+        Model 10: CISS + SPF (Median) & 4.051033 & 3.654879 \\
+        Model 15: GDP + CISS + SPF (5th Percentile) & 4.051566 & 3.180747 \\
+        Model 11: GDP + CISS + SPF (Median) & 4.905692 & 3.435979 \\
+        Model 7: GDP + CISS + SPF (Mean) & 4.871486 & 3.458489 \\
+        Model 19: GDP + CISS + SPF (25th Percentile) & 5.237369 & 2.885878 \\
+        \bottomrule
+    \end{tabular}
+    \end{adjustbox}
+    \label{tab:model_comparison_yoy}
+\end{table}
+
+\begin{itemize}
+    \item Table III shows the utility of SPF percentile-based forecasts for one-year-ahead GDP growth predictions. The 90th percentile SPF forecast, when combined with GDP and CISS, enhances the model’s ability to capture upside risks and improves overall calibration. Conversely, models relying on mid-point (mean/median) forecasts across multiple indicators can introduce excessive complexity without yielding consistent predictive improvements. These results suggest that tailoring forecast models to specific risk scenarios—such as upside or downside risks—can significantly enhance performance.
+\end{itemize}
+
+\pagebreak
+\printbibliography
+
+\end{document}
